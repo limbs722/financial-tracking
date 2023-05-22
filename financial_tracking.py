@@ -48,7 +48,7 @@ def save_file(data, ticker):
     bucket_name = "financial-tracking"
 
     # JSON Data 생성
-    filename = f"{ticker}.json"
+    filename = f'{now.strftime("%Y-%m-%d %H:%M:%S")}_{ticker}.json'
     json_data = json.dumps(data)
     # S3 Bucket 에 파일 업로드
     s3.put_object(Bucket=bucket_name, Key=filename, Body=json_data)
