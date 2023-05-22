@@ -17,6 +17,7 @@ def handler(ticker):
 
     url = f"https://finance.yahoo.com/quote/{ticker}/press-release"
     response = requests.get(url, headers=headers)
+    now = datetime.datetime.now()
     data_list = []
 
     if response.status_code == 200:
@@ -34,8 +35,8 @@ def handler(ticker):
                     title = title_element.text
                     link = title_element.get("href")
                     data_list.append({"title": title, "source": source, "link": link})
-
-    save_file(data_list, ticker)
+    crawling_data = {"date": now.strftime("%Y-%m-%d %H:%M:%S"), "data": data_list}
+    save_file(crawling_data, ticker)
 
 
 def save_file(data, ticker):
@@ -47,7 +48,7 @@ def save_file(data, ticker):
     bucket_name = "financial-tracking"
 
     # JSON Data 생성
-    filename = f'{now.strftime("%Y-%m-%d %H:%M:%S")}_{ticker}.json'
+    filename = f"{ticker}.json"
     json_data = json.dumps(data)
     # S3 Bucket 에 파일 업로드
     s3.put_object(Bucket=bucket_name, Key=filename, Body=json_data)
