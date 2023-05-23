@@ -4,10 +4,11 @@
 """
 from argparse import ArgumentParser as Parser
 from bs4 import BeautifulSoup
+from datetime import datetime
 import requests
-import datetime
 import json
 import boto3
+from pytz import timezone
 
 
 def handler(ticker):
@@ -17,7 +18,7 @@ def handler(ticker):
 
     url = f"https://finance.yahoo.com/quote/{ticker}/press-release"
     response = requests.get(url, headers=headers)
-    now = datetime.datetime.utcnow()
+    now = datetime.now(timezone("Asia/Seoul"))
     data_list = []
 
     if response.status_code == 200:
@@ -40,7 +41,7 @@ def handler(ticker):
 
 
 def save_file(data, ticker):
-    now = datetime.datetime.utcnow()
+    now = datetime.now(timezone("Asia/Seoul"))
     # S3 Client 생성
     s3 = boto3.client("s3")
 
