@@ -17,7 +17,7 @@ def handler(ticker):
 
     url = f"https://finance.yahoo.com/quote/{ticker}/press-release"
     response = requests.get(url, headers=headers)
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     data_list = []
 
     if response.status_code == 200:
@@ -40,7 +40,7 @@ def handler(ticker):
 
 
 def save_file(data, ticker):
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     # S3 Client 생성
     s3 = boto3.client("s3")
 
