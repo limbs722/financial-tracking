@@ -1,6 +1,6 @@
 """
-  - title: Financial Tracking
-  - Desc: 실행 시 ticker를 입력받아 야후 파이낸셜 웹페이지 뉴스 크롤링 하기
+    - title: Financial Tracking
+    - Desc: 실행 시 ticker를 입력받아 야후 파이낸셜 웹페이지 뉴스 크롤링 하기
 """
 from argparse import ArgumentParser as Parser
 from bs4 import BeautifulSoup
@@ -9,6 +9,7 @@ import requests
 import json
 import boto3
 from pytz import timezone
+import aws_s3_util
 
 
 def handler(ticker):
@@ -37,7 +38,8 @@ def handler(ticker):
                     link = title_element.get("href")
                     data_list.append({"title": title, "source": source, "link": link})
     crawling_data = {"date": now.strftime("%Y-%m-%d %H:%M:%S"), "data": data_list}
-    save_file(crawling_data, ticker)
+    aws_s3_util.upload(crawling_data, ticker)
+    # save_file(crawling_data, ticker)
 
 
 def save_file(data, ticker):
