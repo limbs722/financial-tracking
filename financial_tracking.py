@@ -39,24 +39,6 @@ def handler(ticker):
                     data_list.append({"title": title, "source": source, "link": link})
     crawling_data = {"date": now.strftime("%Y-%m-%d %H:%M:%S"), "data": data_list}
     aws_s3_util.upload(crawling_data, ticker)
-    # save_file(crawling_data, ticker)
-
-
-def save_file(data, ticker):
-    now = datetime.now(timezone("Asia/Seoul"))
-    # S3 Client 생성
-    s3 = boto3.client("s3")
-
-    # S3 Bucket 생성
-    bucket_name = "financial-tracking"
-
-    # JSON Data 생성
-    filename = f'{now.strftime("%Y-%m-%d %H:%M:%S")}_{ticker}.json'
-    json_data = json.dumps(data)
-    # S3 Bucket 에 파일 업로드
-    s3.put_object(Bucket=bucket_name, Key=filename, Body=json_data)
-    # with open(f"./{ticker}.json", "w", newline="") as f:
-    #     json.dump(data, f, indent=4, ensure_ascii=False)
 
 
 def main():
